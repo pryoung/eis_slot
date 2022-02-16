@@ -102,6 +102,8 @@ FUNCTION eis_fit_slot_exposure, file, iexp, wavel=wavel, npix=npix, quiet=quiet,
 ;       Added int_avg and bad_pix to output structure; check if the
 ;       bottom slot edge is in the dataset, and set pixels below this
 ;       to missing.
+;     Ver.6, 14-Feb-2022, Peter Young
+;       Two bug fixes.
 ;-
 
 
@@ -120,8 +122,10 @@ ENDIF
 IF n_tags(file) EQ 0 THEN BEGIN
   IF n_elements(wavel) EQ 0 THEN wavel=195.12
   wd=eis_getwindata(file,wavel)
+  filename=file
 ENDIF ELSE BEGIN
   wd=file
+  filename=wd.filename
 ENDELSE
 
 ;
@@ -238,7 +242,7 @@ ny=s[1]
 ;
 ; y-pixel indices.
 ;
-ypix=findgen(ny)*round(wd.scale[1])+yws
+ypix=iindgen(ny)*round(wd.scale[1])+yws+ystart+round(wd.scale[1])/2
 
 
 pix_size=wvl[1]-wvl[0]
@@ -380,7 +384,7 @@ ycen=wd.solar_y[ny/2]+xy[1]
 
 
 missing=wd.missing
-y_arr=make_array(ny,value=missing)
+y_arr=make_array(ny,value=missing,/float)
 
 ;
 ; Define output structure.
@@ -394,7 +398,7 @@ data={aa: output, $
       int: int, $
       err: err, $
       nmiss: nmiss, $
-      file: file, $
+      file: filename, $
       iexp: iexp, $
       nexp: nexp, $
       exp_ind: nexp-iexp, $
