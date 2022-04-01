@@ -104,6 +104,8 @@ FUNCTION eis_fit_slot_exposure, file, iexp, wavel=wavel, npix=npix, quiet=quiet,
 ;       to missing.
 ;     Ver.6, 14-Feb-2022, Peter Young
 ;       Two bug fixes.
+;     Ver.7, 16-Feb-2022, Peter Young
+;       Minor bug fix.
 ;-
 
 
@@ -242,7 +244,7 @@ ny=s[1]
 ;
 ; y-pixel indices.
 ;
-ypix=iindgen(ny)*round(wd.scale[1])+yws+ystart+round(wd.scale[1])/2
+ypix=indgen(ny)*round(wd.scale[1])+yws+ystart+round(wd.scale[1])/2
 
 
 pix_size=wvl[1]-wvl[0]
